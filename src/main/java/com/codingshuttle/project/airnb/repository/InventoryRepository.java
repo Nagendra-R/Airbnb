@@ -31,7 +31,7 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
                 AND i.date BETWEEN :startDate AND :endDate
                 AND (i.totalCount - i.bookedCount) >= :roomsCount
                 AND i.closed = false
-                GROUP BY i.hotel
+                GROUP BY i.hotel,i.room
                 HAVING COUNT(i.date) = :dateCount
             """)
     Page<Hotel> findHotelsWithAvailableInventories(
@@ -42,6 +42,9 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
             @Param("dateCount") Long dateCount,
             Pageable pageable
     );
+
+//    GROUP BY i.hotel
+//    HAVING COUNT(i.date) = :dateCount
 
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
@@ -61,4 +64,5 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
     );
 
 
+    List<Inventory> findByHotelAndDateBetween(Hotel hotel, LocalDate startDate, LocalDate endDate);
 }

@@ -3,6 +3,7 @@ package com.codingshuttle.project.airnb.controller;
 
 import com.codingshuttle.project.airnb.dto.HotelDto;
 import com.codingshuttle.project.airnb.dto.HotelInfoDto;
+import com.codingshuttle.project.airnb.dto.HotelPriceDto;
 import com.codingshuttle.project.airnb.dto.HotelSearchRequest;
 import com.codingshuttle.project.airnb.service.HotelService;
 import com.codingshuttle.project.airnb.service.InventoryService;
@@ -20,9 +21,9 @@ public class HotelBrowseController {
     private final InventoryService inventoryService;
     private final HotelService hotelService;
 
-    @GetMapping("/search")
-    public ResponseEntity<Page<HotelDto>> searchHotels(@RequestBody HotelSearchRequest hotelSearchRequest) {
-        Page<HotelDto> hotels = inventoryService.searchHotels(hotelSearchRequest);
+    @PostMapping("/search")
+    public ResponseEntity<Page<HotelPriceDto>> searchHotels(@RequestBody HotelSearchRequest hotelSearchRequest) {
+        Page<HotelPriceDto> hotels = inventoryService.searchHotels(hotelSearchRequest);
         return ResponseEntity.ok(hotels);
     }
 

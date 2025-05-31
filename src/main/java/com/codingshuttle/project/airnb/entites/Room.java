@@ -16,10 +16,10 @@ import java.time.LocalDateTime;
 public class Room {
 
     @Id
-    @GeneratedValue(strategy =  GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @Column(nullable = false)
+    //    @Column(nullable = false)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,7 +32,7 @@ public class Room {
     @Column(nullable = false)
     private String type;
 
-    @Column(nullable = false,precision = 10,scale = 2)
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal basePrice;
 
     @Column(columnDefinition = "TEXT[]")        //array of text
@@ -53,7 +53,6 @@ public class Room {
 
     @UpdateTimestamp
     private LocalDateTime updateAt;
-
 
 }
 

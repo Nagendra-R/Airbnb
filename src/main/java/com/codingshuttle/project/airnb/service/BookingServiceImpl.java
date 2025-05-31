@@ -10,6 +10,7 @@ import com.codingshuttle.project.airnb.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,7 +58,6 @@ public class BookingServiceImpl implements BookingService {
         }
 
         // Reserve the room/ update the booked count of inventories
-
         for (Inventory inventory : inventoryList) {
             inventory.setReservedCount(inventory.getReservedCount() + bookingRequest.getRoomsCount());
         }
@@ -101,6 +101,7 @@ public class BookingServiceImpl implements BookingService {
         }
 
         if (hasExpiredBooking(booking)) {
+            booking.setBookingStatus(BookingStatus.EXPIRED);
             throw new ResourceNotFoundException("Time add to guests has expired of 10 minutes");
         }
 
@@ -123,7 +124,6 @@ public class BookingServiceImpl implements BookingService {
         return modelMapper.map(booking,BookingDto.class);
 
     }
-
 
     private boolean hasExpiredBooking(Booking booking) {
         return booking.getCreatedAt().plusMinutes(10).isBefore(LocalDateTime.now());

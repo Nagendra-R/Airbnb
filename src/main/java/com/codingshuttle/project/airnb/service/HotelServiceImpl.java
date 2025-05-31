@@ -49,10 +49,10 @@ public class HotelServiceImpl implements HotelService {
         Hotel hotel = hotelRepository.findById(hotelId)
                 .orElseThrow(() -> new ResourceNotFoundException("hotel not found with hotel id :" + hotelId));
         hotelDto.setActive(false);
-        modelMapper.map(hotelDto,hotel);
+        modelMapper.map(hotelDto, hotel);
         hotel.setId(hotelId);
         Hotel updateHotel = hotelRepository.save(hotel);
-        return modelMapper.map(updateHotel,HotelDto.class);
+        return modelMapper.map(updateHotel, HotelDto.class);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class HotelServiceImpl implements HotelService {
 
         //TODO:: delete future inventories for this hotel
         List<Room> rooms = hotel.getRooms();
-        for (Room room : rooms){
+        for (Room room : rooms) {
             inventoryService.deleteAllInventories(room);
             roomRepository.deleteById(room.getId());
         }
@@ -77,18 +77,18 @@ public class HotelServiceImpl implements HotelService {
         Hotel hotel = hotelRepository.findById(hotelId)
                 .orElseThrow(() -> new ResourceNotFoundException("hotel not found with hotel id :" + hotelId));
         hotel.setActive(true);
-         Hotel activatedHotel = hotelRepository.save(hotel);
-        log.info("activated the hotel with id : {}",hotelId);
+        Hotel activatedHotel = hotelRepository.save(hotel);
+        log.info("activated the hotel with id : {}", hotelId);
 
         //TODO:: create inventory for all the rooms
         //crate inventory for all rooms in this hotel
         //assuming only first time
         List<Room> rooms = hotel.getRooms();
-        for (Room room : rooms){
+        for (Room room : rooms) {
             inventoryService.initializeRoomForAYear(room);
         }
 
-        return modelMapper.map(activatedHotel,HotelDto.class);
+        return modelMapper.map(activatedHotel, HotelDto.class);
     }
 
     @Override
@@ -99,7 +99,7 @@ public class HotelServiceImpl implements HotelService {
                 map((element) -> modelMapper.map(element, RoomDto.class))
                 .toList();
 
-        return new HotelInfoDto(modelMapper.map(hotel,HotelDto.class),rooms);
+        return new HotelInfoDto(modelMapper.map(hotel, HotelDto.class), rooms);
 
     }
 

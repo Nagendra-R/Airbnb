@@ -2,10 +2,13 @@ package com.codingshuttle.project.airnb.service;
 
 
 import com.codingshuttle.project.airnb.dto.HotelDto;
+import com.codingshuttle.project.airnb.dto.HotelPriceDto;
 import com.codingshuttle.project.airnb.dto.HotelSearchRequest;
 import com.codingshuttle.project.airnb.entites.Hotel;
+import com.codingshuttle.project.airnb.entites.HotelMinPrice;
 import com.codingshuttle.project.airnb.entites.Inventory;
 import com.codingshuttle.project.airnb.entites.Room;
+import com.codingshuttle.project.airnb.repository.HotelMinPriceRepository;
 import com.codingshuttle.project.airnb.repository.InventoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,10 +26,12 @@ import java.time.temporal.ChronoUnit;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class InventoryServiceImpl implements InventoryService {
-    private final ModelMapper modelMapper;
 
+    private final ModelMapper modelMapper;
     private final InventoryRepository inventoryRepository;
+    private final HotelMinPriceRepository hotelMinPriceRepository;
 
     @Override
     public void initializeRoomForAYear(Room room) {
@@ -59,15 +64,17 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public Page<HotelDto> searchHotels(HotelSearchRequest hotelSearchRequest) {
+    public Page<HotelPriceDto> searchHotels(HotelSearchRequest hotelSearchRequest) {
+        log.info("");
         Pageable pageable = PageRequest.of(
                 hotelSearchRequest.getPage() != null ? hotelSearchRequest.getPage() : 0,
                 hotelSearchRequest.getSize() != null ? hotelSearchRequest.getSize() : 10
         );
 
         Long dateCount = ChronoUnit.DAYS.between(hotelSearchRequest.getStartDate(), hotelSearchRequest.getEndDate()) + 1;
+        log.info("available inventories {}",dateCount);
 
-        Page<Hotel> hotels = inventoryRepository.findHotelsWithAvailableInventories(
+        Page<HotelPriceDto> hotels = hotelMinPriceRepository.findHotelsWithAvailableInventories(
                 hotelSearchRequest.getCity(),
                 hotelSearchRequest.getStartDate(),
                 hotelSearchRequest.getEndDate(),
@@ -76,7 +83,7 @@ public class InventoryServiceImpl implements InventoryService {
                 pageable
         );
 
-        return hotels.map(hotel -> modelMapper.map(hotel, HotelDto.class));
+        return hotels;
     }
 
 }
