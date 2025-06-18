@@ -14,7 +14,7 @@ public class PricingService {
         PricingStrategy pricingStrategy = new BasePricingStrategy();
 
         //apply all additional strategies
-        pricingStrategy = new SurgePricingStrategy(pricingStrategy);
+//        pricingStrategy = new SurgePricingStrategy(pricingStrategy);
         pricingStrategy = new OccupancyPricingStrategy(pricingStrategy);
         pricingStrategy = new UrgencyPricingStrategy(pricingStrategy);
 //        pricingStrategy = new HolidayPricingStrategy(pricingStrategy);

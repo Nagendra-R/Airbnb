@@ -6,11 +6,13 @@ import com.codingshuttle.project.airnb.dto.GuestDto;
 import com.codingshuttle.project.airnb.entites.*;
 import com.codingshuttle.project.airnb.entites.enums.BookingStatus;
 import com.codingshuttle.project.airnb.exception.ResourceNotFoundException;
+import com.codingshuttle.project.airnb.exception.UnAuthorizedException;
 import com.codingshuttle.project.airnb.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -95,6 +97,11 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found with id: " + bookingId));
 
+        User user = getCurrentUser();
+        if(!user.equals(booking.getUser())){
+            throw new UnAuthorizedException("User with unauthorized details: "+ user);
+        }
+
         //check bookingStatus is in RESERVED
         if (!booking.getBookingStatus().equals(BookingStatus.RESERVED)) {
             throw new ResourceNotFoundException("Guests can only be added to RESERVED bookings");
@@ -113,7 +120,7 @@ public class BookingServiceImpl implements BookingService {
 
         for (GuestDto guestDto :guestDtoList){
             Guest guest = modelMapper.map(guestDto,Guest.class);
-            guest.setUser(getCurrentUser());
+            guest.setUser(user);
             guest = guestRepository.save(guest);
             booking.getGuests().add(guest);
         }
@@ -130,8 +137,6 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private User getCurrentUser(){
-        User user = userRepository.findById(1L)
-                .orElseThrow(()->new ResourceNotFoundException("User Not found with  id :"+1));
-        return user;
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }
