@@ -2,6 +2,9 @@
   <configuration default="false" name="AirnbApplication" type="Application" factoryName="Application">
     <option name="ALTERNATIVE_JRE_PATH" value="17" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <envs>
+      <env name="STRIPE_SECRET_KEY" value="sk_test_51RasSUIVOCl02gnvbo5xNQE8AL9f5Ou0aoxCyyYlgnDhZroO8yXiv4zwhiNw5lG5YuXXYlJyniPn9FSUFlx2fLmn00hiqIuHCT" />
+    </envs>
     <option name="MAIN_CLASS_NAME" value="com.codingshuttle.project.airnb.AirnbApplication" />
     <module name="airnb" />
     <method v="2">
