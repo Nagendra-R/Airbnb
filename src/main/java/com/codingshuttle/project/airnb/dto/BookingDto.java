@@ -8,6 +8,7 @@ import com.codingshuttle.project.airnb.entites.User;
 import com.codingshuttle.project.airnb.entites.enums.BookingStatus;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -27,5 +28,5 @@ public class BookingDto {
     private LocalDateTime updateAt;
     private BookingStatus bookingStatus;
     private Set<GuestDto> guests;
-
+    private BigDecimal amount;
 }

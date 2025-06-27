@@ -31,15 +31,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;  //encryt password while storing
 
-
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
-
     private String name;
-
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
@@ -52,16 +44,38 @@ public class User implements UserDetails {
                 .collect(Collectors.toSet());
     }
 
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        User user = (User) o;
+//        return Objects.equals(id, user.id);
+//    }
+
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        User user = (User) o;
+//        return id != null && getId().equals(user.id);
+//    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof User)) return false; // ✅ More flexible than getClass() check
         User user = (User) o;
-        return Objects.equals(id, user.id);
+        return id != null && id.equals(user.id);
     }
 
     @Override
     public String getUsername() {
         return email;
+    }
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

@@ -33,7 +33,7 @@ public class Booking {
     private Room room;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id",nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(nullable = false)
@@ -58,14 +58,15 @@ public class Booking {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "booking_guest",
-            joinColumns= @JoinColumn(name = "booking_id"),
+            joinColumns = @JoinColumn(name = "booking_id"),
             inverseJoinColumns = @JoinColumn(name = "guest_id")
     )
     private Set<Guest> guests;
 
-    @Column(nullable = false,precision = 10,scale = 2)
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
 
-
+    @Column(unique = true)
+    private String paymentSessionId;
 
 }
